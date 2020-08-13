@@ -24,7 +24,7 @@ public class CourseController {
 		return service.findAll();
 	}
 	
-	@GetMapping("/course/{courseId}")
+	@GetMapping("/courses/{courseId}")
 	public Course getCourse(@PathVariable String courseId) {
 		
 		Optional<Course> courseOpt = service.findById(courseId);
