@@ -1,0 +1,94 @@
+
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="index.css">
+
+    <script src="index.js"></script>
+
+    <title>Login Page</title>
+
+
+
+</head>
+
+
+<body>
+
+    <nav class="navbar navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">
+          <img src="images/greenlogo.png" width="30" height="30" class="d-inline-block align-top" alt="">
+          Home
+        </a>
+      </nav>
+
+    <div class="row">
+        <div class="column-left" style = "text-align: center;">
+          <h2>Announcements</h2>
+          <p>Men's Basketball Game Tonight 7pm Home</p>
+        </div>
+        <div class="column-right" style = "text-align: center;" >
+          <h1>Welcome to the University Webpage</h1>
+
+		<div class="container h-100">
+            <div class="d-flex justify-content-center h-100">
+                <div class="user_card">
+                    <div class="d-flex justify-content-center">
+                        <div class="brand_logo_container">
+                            <img src="images/university_building.png" class="brand_logo" alt="Logo">
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center form_container">
+                        <form onsubmit = "initialize()" action = "CourseCatalog.html">
+                            <div class="input-group mb-3">
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                </div>
+                                <input type="text" id = "username" class="form-control input_user" placeholder="username">
+                            </div>
+                            <div class="input-group mb-2">
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><i class="fas fa-key"></i></span>
+                                </div>
+                                <input type="password" id = "password" class="form-control input_pass"  placeholder="password">
+                            </div>
+
+                                <div class="d-flex justify-content-center mt-3 login_container">
+
+ 									<input type="submit" >
+ 									 </div>
+                        </form>
+                    </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+
+
+            <img src="images/college1.jpeg" width="350px" height="275px" alt="">
+        </div>
+
+
+      </div>
+
+
+
+    </div>
+
+</body>
+
+</html>
