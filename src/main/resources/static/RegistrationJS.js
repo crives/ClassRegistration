@@ -1,5 +1,5 @@
 function initialize(){
-    getRegistrations("http://localhost:8080/api/Registration")
+    getRegistrations("/api/registration/")
     renderStudentRegistration();
 }
 
@@ -29,7 +29,8 @@ function getStudentCourses(studentId){
     xhttpList.onreadystatechange = function () {
 
         if (this.readyState == 4 && this.status == 200) {
-            localStorage.setItem("studentRegistrations", xhttpList.responseText);        }
+            localStorage.setItem("studentRegistrations", xhttpList.responseText);  
+        }
     };
     xhttpList.open("GET", url, true);
     xhttpList.send();
@@ -37,19 +38,29 @@ function getStudentCourses(studentId){
 
 }
 
-
 function renderStudentRegistration() {
     // Ajax returns an array of JSON objects - the index represents each individual JSON object from our AJAX call
-    // We can the iterate over all of our students
     let table = document.getElementById("tempId");
     generateTableHead(table);
-    generateTableHead(table);
- 
+    generateTable(table);
+
 } 
 
+function getOneRegistration(url) {
 
+    //Get an individual pokemon from the nested endpoint
+    var xhttpList = new XMLHttpRequest();
+    xhttpList.open("GET", url, false);
 
-
+    xhttpList.onreadystatechange = function() {
+    if(this.readyState == 4 && this.status == 200) {
+        console.log("loaded into registration url");
+        sessionStorage.setItem("oneregistration", this.responseText);
+        }
+    };
+    xhttpList.send();
+        
+}
 
 function generateTableHead(table) {
     let thead = table.createTHead();
@@ -90,16 +101,28 @@ function generateTableHead(table) {
       th7.appendChild(credits);
       row.appendChild(th7);
 
-
-
-
-      
-    
   }
 
   function generateTable(table) {
-    var studentRegistrations = JSON.parse(localStorage.getItem("studentRegistrations"));
-    for (var i = 0; i < studentRegistrations.results.length; i++) {
+
+    // Grab HTML placeholder
+    // var oneregistration = document.getElementById("oneregistration");
+
+    // Loop through pokemon from local storage
+    var allRegistrations = JSON.parse(localStorage.getItem("studentRegistrations"));
+
+    for (var index = 0; index < allRegistrations.results.length; index++) {
+
+    // element is our iterable registration from the stored json
+    let element = allRegistrations.results[index];
+
+        getOneRegistration(element.url);
+
+        // Load in the individual pokemon json
+        var thisRegistration = JSON.parse(sessionStorage.getItem("oneregistration"));
+        console.log(thisRegistration);
+        console.log(thisRegistration.studentId);
+
       let row = table.insertRow();
         let cell1 = row.insertCell();
         let text1 = document.createTextNode(studentRegistrations[i].studentId);
