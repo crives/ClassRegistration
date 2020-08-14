@@ -17,20 +17,36 @@
     <script src="RegistrationJS.js"></script>
     <!-- CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-
+	<link rel="stylesheet" href="background.css">
 </head>
 
 <body class="containter-fluid bg-light" onload ="initialize()">
-    <table class="table" id="tempId">
-
-
-
-    </table>
-
-
-
-
+	
+	<!-- Page Content -->
+	<div class="container">
+	  <div class="card border-0 shadow my-5" >
+	    <div class="card-body p-5">
+	      <h1 class="font-weight-light">Welcome to The Registration Page</h1>
+	      <p class="lead">Click on the course a class to add it to you schedule</p>
+	      
+	      <div class="row">
+	      	<!-- table for student classes -->
+	      	<div class="col-4" >	      	
+	      	<table class="table border bothtables" id="studentClasses"></table>
+	      	</div>
+	      	<!-- table for course catalog -->
+	      	<div class="col-8">
+	      	<h2 class="font-weight-light">Course Catalog</h2>	      
+	      	<table class="table border bothtables" id="courseCatalog"></table>
+	      	</div>
+	      </div>
+	      
+	      <div style="height: 700px"></div>
+	      <p class="lead mb-0">You've reached the end!</p>
+	    </div>
+	  </div>
+	</div>
+    
 
 </body>
-    
 </html>
