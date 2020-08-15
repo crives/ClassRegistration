@@ -175,12 +175,12 @@ function generateCourseCatalog(table){
     
 }
 
-function generateCourseHead(table,courses){
+function generateCourseHead(table,course){
 	
 	var head = table.createTHead();
     var row = head.insertRow();
     
-    for(element in courses[0]){
+    for(element in course){
     	
         var th = document.createElement("th");
         var text = document.createTextNode(course[element]);
