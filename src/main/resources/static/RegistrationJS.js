@@ -145,13 +145,7 @@ function generateCourseCatalog(table){
    			var content = document.createTextNode(course[element]);
    			if(element == "description"){
    				//var button = document.createElement("button");
-   				cell.innerHTML = '<button data-toggle="collapse" data-target="#description">Description</button>';
-   				var div = document.createElement("div");
-   				div.id = "description";
-   				div.className = "collapse";
-   				div.appendChild(content);
-   				cell.appendChild(div)
-   				row.appendChild(cell);
+   				isButton(cell,i,row,content);
    				continue;
    			}
    			cell.appendChild(content);
@@ -161,6 +155,16 @@ function generateCourseCatalog(table){
     	
     }
     
+}
+
+function isButton(cell,i,row,content){
+		cell.innerHTML = '<button data-toggle="collapse" data-target="#description'+i+'">Description</button>';
+		var div = document.createElement("div");
+		div.id = "description"+i;
+		div.className = "collapse";
+		div.appendChild(content);
+		cell.appendChild(div)
+		row.appendChild(cell);
 }
 
 function generateCourseHead(table,courses){
