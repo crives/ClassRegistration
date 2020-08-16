@@ -88,6 +88,7 @@ function generateStudentClasses(table){
 
         var row = table.insertRow(); 
         var studentRegistration = studentRegistrationsArray[i];
+
         for(element in studentRegistrationsArray[i]){
             console.log(element);
             var cell = row.insertCell();
@@ -135,12 +136,13 @@ function generateCourseCatalog(table){
     console.log(localStorage.getItem("allCourses"));
     var courses = JSON.parse(localStorage.getItem("allCourses"));
     generateCourseHead(table,courses[0]);
-
     console.log(courses[0])
 
     for(var i = 0;i<courses.length;i++){
         var row = table.insertRow(); 
         var course = courses[i];
+        courses[i]["Add Course"] = "Add Course";
+
         for(element in courses[i]){
             console.log(element);
             var cell = row.insertCell();
@@ -169,7 +171,11 @@ function generateCourseHead(table,course){
     var row = head.insertRow();
 
     var courses = JSON.parse(localStorage.getItem("allCourses"));
+    courses[0]["Add Course"] = "Add Course";
+
     var course = courses[0];
+    console.log(courses[0]);
+
     console.log(course);
     console.log(Object.keys(course));
     var objKeys = Object.keys(course);
