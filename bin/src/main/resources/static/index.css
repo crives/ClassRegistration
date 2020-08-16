@@ -1,0 +1,60 @@
+
+.navbar-collapse {
+    -ms-flex-preferred-size: 100%;
+    flex-basis: 100%;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    -ms-flex-align: right;
+    align-items: right;
+    margin-right: 0px;
+}
+
+
+
+div.collapse navbar-collapse{
+
+    color:pink;
+}
+
+
+h1{
+    text-align: center;
+    color: honeydew;
+}
+
+
+body{
+    margin: 0px;
+      background-color: green;
+      font-family: 'Times New Roman';
+}
+
+.left-div{
+
+    background-color: khaki;
+    width: 200px;
+    height: 500px;
+}
+
+.column-left {
+    float: left;
+    width: 25%;
+    padding: 10px;
+    background-color: rgb(236, 215, 18);
+    height: 800px;
+  }
+  
+  .column-right {
+
+    background-color: rgb(79, 180, 79);
+    float: left;
+
+    width: 75%;
+    padding: 10px;
+    height: 300px; /* Should be removed. Only for demonstration */
+  }
+
+  h2 {
+    text-align: center;
+  }
+

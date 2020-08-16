@@ -1,13 +1,18 @@
 package com.cognixia.jump.controller;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cognixia.jump.exception.ResourceNotFoundException;
 import com.cognixia.jump.model.Registration;
 import com.cognixia.jump.repository.RegistrationRepository;
 
@@ -32,45 +37,34 @@ public class RegistrationController {
 	}
 	
 	
-//	@GetMapping("/registration/{studentId}")
-//	public List<Registration> getRegistrationByStudentId(@PathVariable long studentId) throws Exception{
-//		
-//		Optional<List<Registration>> optional = service.findByStudentId(studentId);
-//		 
-//		if(optional.get().isEmpty()) {
-//			throw new ResourceNotFoundException("Registration with studentId = " + studentId + " not found");
-//		}
-//		else return optional.get();
-//		 
-//		//return new Student();
-//	}
-
-//	@DeleteMapping("/delete/Registration")
-//	public ResponseEntity<String> deleteStudent(@RequestBody Map<String, String> registrationInfo) throws Exception {
-//	 	
-//		long studentId = Long.parseLong( registrationInfo.get("studentId") );
-//		String courseId = registrationInfo.get("courseId");
-//		
-//		Registration registration = service.findByStudentIDandCourseID(studentId, courseId);
-//		
-//		if(registration!=null) {
-//			service.deleteByStudentIDandCourseID(studentId, courseId);
-//			
-//			return ResponseEntity.status(200).body("Deleted registration with studentiId = " + studentId + " and courseId" + courseId);	
-//		}
-//		else {
-//			return ResponseEntity.status(400)
-//					.body("Registration with studentId = " + studentId + " and courseId" + courseId + " was not found");
-//		}
-//			
-//	}
-
+	@GetMapping("/registration/{studentId}")
+	public List<Registration> getRegistrationByStudentId(@PathVariable long studentId) throws Exception{
+		
+		Optional<List<Registration>> optional = service.findByStudentId(studentId);
+		 
+		if(optional.get().isEmpty()) {
+			throw new ResourceNotFoundException("Registration with studentId = " + studentId + " not found");
+		}
+		else return optional.get();
+		 
+	}
+	
+	@DeleteMapping("/registration/delete/{registrationId}")
+	public ResponseEntity<String> deleteRegistration(@PathVariable long registrationId) {
+		
+		Optional<Registration> found = service.findById(registrationId);
+		
+		if(found.isPresent()) {
+			
+			service.deleteById(registrationId);
+			return ResponseEntity.status(200).body("Deleted registration with id = "
+					+ registrationId);
+		} else {
+			return ResponseEntity.status(400)
+					.header("registration id", registrationId + "")
+					.body("Registration with id = " + registrationId + " not found");
+		}
+		
+	}
 }
-
-
-
-
-
-
-
 
