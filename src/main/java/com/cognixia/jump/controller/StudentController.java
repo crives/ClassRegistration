@@ -41,6 +41,8 @@ public class StudentController {
 		return passwords;
 	}
 	
+
+	
 	@PostMapping("/students/add")
 	public String addStudent(@RequestBody Student student) throws NoSuchAlgorithmException, InvalidKeySpecException{
 		student.setId(-1L);
