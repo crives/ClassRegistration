@@ -136,11 +136,14 @@ function generateCourseCatalog(table){
     console.log(courses[0])
     for(var i = 0;i<courses.length;i++){
         var row = table.insertRow(); 
+        
         var course = courses[i];
+        
         courses[i]["Add Course"] = "Add Course";
         for(element in courses[i]){
             console.log(element);
             var cell = row.insertCell();
+            
             cell.style.border = "1px solid black";
             var content = document.createTextNode(course[element]);
             if(element == "description"){
@@ -148,12 +151,47 @@ function generateCourseCatalog(table){
                 isButton(cell,i,row,content);
                 continue;
             }
+            cell.onclick = moveClassToStudent(course);
             cell.appendChild(content);
             row.appendChild(cell);
         }
     }
 
 }
+
+function moveClassToStudent(course){
+	return function() {
+        alert('sgfs'+course['description']);
+        insertRegistration(course);
+    };
+}
+
+function insertRegistration(course){
+    url = "api/registration/add"
+    var xhttpList = new XMLHttpRequest();
+
+    var data = {
+    		"studentId":4,
+    		"courseId": "AMS250",
+    		"registrationId":13
+    };
+    console.log(data);
+    // Read JSON - and put in storage
+    xhttpList.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log("result"); 
+        }
+    };
+    console.log(course);
+    var send = JSON.stringify(data); 
+    console.log(send);
+    
+    xhttpList.open("POST", url, true);
+    xhttpList.setRequestHeader("Content-type", "application/json");
+    xhttpList.send(send);
+    console.log("worked");
+}
+
 
 function isButton(cell,i,row,content){
 	cell.innerHTML = '<button data-toggle="collapse" data-target="#description'+i+'">Description</button>';
