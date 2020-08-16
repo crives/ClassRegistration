@@ -1,8 +1,10 @@
 function initialize(){
+
     getRegistrations("/api/registration/");
     getAllCourses("/api/courses/")
     generateTables();
 }
+
 function getAllCourses(url) {
     //make initial api call to get Student list
     var xhttpList = new XMLHttpRequest();
@@ -16,7 +18,9 @@ function getAllCourses(url) {
     xhttpList.send();
     console.log("Registration List stored");
 }
+
 function getRegistrations(url) {
+
     //make initial api call to get Student list
     var xhttpList = new XMLHttpRequest();
     // Read JSON - and put in storage
@@ -29,7 +33,10 @@ function getRegistrations(url) {
     xhttpList.send();
     console.log("Registration List stored");
 }
+
+
 function generateTables() {
+
     getStudentCourses();
     //get tables 
     var studentClasses = document.getElementById("studentClasses");
@@ -39,7 +46,9 @@ function generateTables() {
     generateStudentClasses(studentClasses);
     generateCourseCatalog(courseCatalog);
 }
+
 function getStudentCourses(){
+
     url = "api/registration/2"
     var xhttpList = new XMLHttpRequest();
     // Read JSON - and put in storage
@@ -52,6 +61,7 @@ function getStudentCourses(){
     xhttpList.send();
     console.log("Student Registrations List stored");
 }
+
 function getOneRegistration(url) {
     //Get an individual pokemon from the nested endpoint
     var xhttpList = new XMLHttpRequest();
@@ -64,19 +74,25 @@ function getOneRegistration(url) {
     };
     xhttpList.send();
 }
+
 function generateStudentClasses(table){
     console.log(localStorage.getItem("studentRegistrations"));
-    var studentClasses = JSON.parse(localStorage.getItem("studentRegistrations"));
-    generateStudentClassesHead(table,studentClasses);
-    console.log(studentClasses)
-    for(var i = 0;i<studentClasses.length;i++){
+
+    var studentRegistrationsArray = JSON.parse(localStorage.getItem("studentRegistrations"))
+
+    generateStudentClassesHead(table,studentRegistrationsArray[0]);
+    
+    console.log(studentRegistrationsArray)
+
+    for(var i = 0; i < studentRegistrationsArray.length; i++){
+
         var row = table.insertRow(); 
-        var studentClass = studentClasses[i];
-        for(element in studentClasses[i]){
+        var studentRegistration = studentRegistrationsArray[i];
+        for(element in studentRegistrationsArray[i]){
             console.log(element);
             var cell = row.insertCell();
             cell.style.border = "1px solid black";
-            var content = document.createTextNode(studentClass[element]);
+            var content = document.createTextNode(studentRegistration[element]);
             if(element == "description"){
                 //var button = document.createElement("button");
                 cell.innerHTML = '<button data-toggle="collapse" data-target="#description">Description</button>';
@@ -93,23 +109,35 @@ function generateStudentClasses(table){
         }
     }
 }
-function generateStudentClassesHead(table, studentClasses){
+
+function generateStudentClassesHead(table, studentRegistration){
+
     var head = table.createTHead();
     var row = head.insertRow();
-    console.log(Object.keys(studentClasses));
-    for(element in Object.keys(studentClasses)){
+
+    var studentRegistrationsArray = JSON.parse(localStorage.getItem("studentRegistrations"));
+    var studentRegistration = studentRegistrationsArray[0];
+    console.log(studentRegistration);
+    console.log(Object.keys(studentRegistration));
+    var objKeys1 = Object.keys(studentRegistration);
+
+    for(element in objKeys1) {
         var th = document.createElement("th");
-        var text = document.createTextNode([element]);
+        var text = document.createTextNode(objKeys1[element]);
         th.style.border = "2px solid black";
         th.appendChild(text);
         row.appendChild(th);
     }
 }
+
 function generateCourseCatalog(table){
+
     console.log(localStorage.getItem("allCourses"));
     var courses = JSON.parse(localStorage.getItem("allCourses"));
     generateCourseHead(table,courses[0]);
-    console.log(courses)
+
+    console.log(courses[0])
+
     for(var i = 0;i<courses.length;i++){
         var row = table.insertRow(); 
         var course = courses[i];
@@ -134,12 +162,21 @@ function generateCourseCatalog(table){
         }
     }
 }
+
 function generateCourseHead(table,course){
+
     var head = table.createTHead();
     var row = head.insertRow();
-    for(element in course){
+
+    var courses = JSON.parse(localStorage.getItem("allCourses"));
+    var course = courses[0];
+    console.log(course);
+    console.log(Object.keys(course));
+    var objKeys = Object.keys(course);
+
+    for(element in Object.keys(course)) {
         var th = document.createElement("th");
-        var text = document.createTextNode(course[element]);
+        var text = document.createTextNode(objKeys[element]);
         th.style.border = "2px solid black";
         th.appendChild(text);
         row.appendChild(th);
