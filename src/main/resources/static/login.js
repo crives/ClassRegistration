@@ -1,6 +1,6 @@
 function initialize(){
     login();
-    setAction();
+   // setAction();
 
     
 }
@@ -77,6 +77,8 @@ function login(){
                 localStorage.setItem("passwordlogin", password);
                 correct = true;
                 localStorage.setItem("validate", correct);
+      		  document.user_form.action = "CourseCatalog.html";
+
 
                break;
             }
@@ -88,6 +90,8 @@ function login(){
         
         	
         }
+	  document.user_form.action = "index.html";
+
     
 
     }
