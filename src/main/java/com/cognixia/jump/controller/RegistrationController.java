@@ -1,13 +1,16 @@
 package com.cognixia.jump.controller;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cognixia.jump.exception.ResourceNotFoundException;
 import com.cognixia.jump.model.Registration;
 import com.cognixia.jump.repository.RegistrationRepository;
 
@@ -32,18 +35,18 @@ public class RegistrationController {
 	}
 	
 	
-//	@GetMapping("/registration/{studentId}")
-//	public List<Registration> getRegistrationByStudentId(@PathVariable long studentId) throws Exception{
-//		
-//		Optional<List<Registration>> optional = service.findByStudentId(studentId);
-//		 
-//		if(optional.get().isEmpty()) {
-//			throw new ResourceNotFoundException("Registration with studentId = " + studentId + " not found");
-//		}
-//		else return optional.get();
-//		 
-//		//return new Student();
-//	}
+	@GetMapping("/registration/{studentId}")
+	public List<Registration> getRegistrationByStudentId(@PathVariable long studentId) throws Exception{
+		
+		Optional<List<Registration>> optional = service.findByStudentId(studentId);
+		 
+		if(optional.get().isEmpty()) {
+			throw new ResourceNotFoundException("Registration with studentId = " + studentId + " not found");
+		}
+		else return optional.get();
+		 
+		//return new Student();
+	}
 
 //	@DeleteMapping("/delete/Registration")
 //	public ResponseEntity<String> deleteStudent(@RequestBody Map<String, String> registrationInfo) throws Exception {

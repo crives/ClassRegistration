@@ -1,132 +1,255 @@
 function initialize(){
-    getRegistrations("http://localhost:8080/api/Registration")
-    renderStudentRegistration();
+
+    getRegistrations("/api/registration/");
+    getAllCourses("/api/courses/")
+    generateTables();
+}
+
+function getAllCourses(url) {
+    //make initial api call to get Student list
+    var xhttpList = new XMLHttpRequest();
+    // Read JSON - and put in storage
+    xhttpList.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            localStorage.setItem("allCourses", xhttpList.responseText);        
+        }
+    };
+    xhttpList.open("GET", url, true);
+    xhttpList.send();
+    console.log("Registration List stored");
 }
 
 function getRegistrations(url) {
 
     //make initial api call to get Student list
     var xhttpList = new XMLHttpRequest();
-
     // Read JSON - and put in storage
     xhttpList.onreadystatechange = function () {
-
         if (this.readyState == 4 && this.status == 200) {
-            localStorage.setItem("allRegistrations", xhttpList.responseText);        }
+            localStorage.setItem("allRegistrations", xhttpList.responseText);        
+        }
     };
     xhttpList.open("GET", url, true);
     xhttpList.send();
     console.log("Registration List stored");
-
 }
 
-function getStudentCourses(studentId){
-    url = "/Registration/" + studentId
 
+function generateTables() {
+
+    getStudentCourses();
+    //get tables 
+    var studentClasses = document.getElementById("studentClasses");
+    var courseCatalog = document.getElementById("courseCatalog");
+    //generateStudentClasses(studentClasses);
+    //generateCourseCatalog(studentClasses);
+    generateStudentClasses(studentClasses);
+    generateCourseCatalog(courseCatalog);
+}
+
+function getStudentCourses(){
+
+    url = "api/registration/1"
     var xhttpList = new XMLHttpRequest();
-
     // Read JSON - and put in storage
     xhttpList.onreadystatechange = function () {
-
         if (this.readyState == 4 && this.status == 200) {
-            localStorage.setItem("studentRegistrations", xhttpList.responseText);        }
+            localStorage.setItem("studentRegistrations", xhttpList.responseText);  
+        }
     };
     xhttpList.open("GET", url, true);
     xhttpList.send();
     console.log("Student Registrations List stored");
+}
+
+function getOneRegistration(url) {
+    //Get an individual pokemon from the nested endpoint
+    var xhttpList = new XMLHttpRequest();
+    xhttpList.open("GET", url, false);
+    xhttpList.onreadystatechange = function() {
+    if(this.readyState == 4 && this.status == 200) {
+        console.log("loaded into registration url");
+        sessionStorage.setItem("oneregistration", this.responseText);
+        }
+    };
+    xhttpList.send();
+}
+
+function generateStudentClasses(table){
+    console.log(localStorage.getItem("studentRegistrations"));
+
+    var studentRegistrationsArray = JSON.parse(localStorage.getItem("studentRegistrations"))
+
+    generateStudentClassesHead(table);
+    
+    console.log(studentRegistrationsArray)
+
+    for(var i = 0; i < studentRegistrationsArray.length; i++){
+
+        var row = table.insertRow(); 
+       // var studentRegistration = studentRegistrationsArray[i];
+        var courseId = studentRegistrationsArray[i].courseId;
+        getOnecourse(courseId);
+        var course = JSON.parse(sessionStorage.getItem("course"));
+        console.log(element);
+
+    //     var cell1 = row.insertCell();
+    //     cell1.style.border = "1px solid black";
+    //     var content1 = document.createTextNode(course.courseId);
+
+    //     var cell2 = row.insertCell();
+    //     cell2.style.border = "1px solid black";
+    //     var content2 = document.createTextNode(course.department);
+
+    //     var cell3 = row.insertCell();
+    //     cell3.style.border = "1px solid black";
+    //     var content3 = document.createTextNode(course.name);
+
+    //     var cell4 = row.insertCell();
+    //     cell4.style.border = "1px solid black";
+    //     var content4 = document.createTextNode(course.credits);
+
+    //     var cell5 = row.insertCell();
+    //     cell5.style.border = "1px solid black";
+    //     var content5 = document.createTextNode(course.description);
+
+    //     var cell6 = row.insertCell();
+    //     cell6.style.border = "1px solid black";
+    //     var content6 = document.createTextNode(course.prerequisites);
+
+    //     cell1.appendChild(content1);
+    //     row.appendChild(cell1);
+    //     cell2.appendChild(content2);
+    //     row.appendChild(cell2);
+    //     cell3.appendChild(content3);
+    //     row.appendChild(cell3);
+    //     cell4.appendChild(content4);
+    //     row.appendChild(cell4);
+    //     cell5.appendChild(content5);
+    //     row.appendChild(cell5);
+    //     cell6.appendChild(content6);
+    //     row.appendChild(cell6);
+
+    //     sessionStorage.removeItem("course");
+      
+
+        
+
+
+        for(element in course){
+
+            console.log(element);
+            var cell = row.insertCell();
+            cell.style.border = "1px solid black";
+            var content = document.createTextNode(course[element]);
+            if(element == "description"){
+                //var button = document.createElement("button");
+                cell.innerHTML = '<button data-toggle="collapse" data-target="#description">Description</button>';
+                var div = document.createElement("div");
+                div.id = "description";
+                div.className = "collapse";
+                div.appendChild(content);
+                cell.appendChild(div)
+                row.appendChild(cell);
+                continue;
+            }
+            cell.appendChild(content);
+            row.appendChild(cell);
+        }
+    }
+}
+
+function getOnecourse(courseId){
+    url = "api/courses/" + courseId;
+    var xhttpList = new XMLHttpRequest();
+    xhttpList.open("GET", url, false);
+
+    xhttpList.onreadystatechange = function() {
+        if(this.readyState == 4 && this.status == 200) {
+            console.log("loaded into course url");
+            sessionStorage.setItem("course", this.responseText);
+        }
+    };
+    xhttpList.send();
 
 }
 
 
-function renderStudentRegistration() {
-    // Ajax returns an array of JSON objects - the index represents each individual JSON object from our AJAX call
-    // We can the iterate over all of our students
-    let table = document.getElementById("tempId");
-    generateTableHead(table);
-    generateTableHead(table);
- 
-} 
 
+function generateStudentClassesHead(table, studentRegistration){
 
+    var head = table.createTHead();
+    var row = head.insertRow();
 
+    var courseColumnnames = JSON.parse(localStorage.getItem("allCourses"));
+    var course = courseColumnnames[0];
+    console.log(course);
+    console.log(Object.keys(course));
+    var objKeys1 = Object.keys(course);
 
-
-function generateTableHead(table) {
-    let thead = table.createTHead();
-    let row = thead.insertRow();
-
-      let th1 = document.createElement("th");
-      let studentId = document.createTextNode("Student ID");
-      th1.appendChild(studentId);
-      row.appendChild(th1);
-
-      let th2 = document.createElement("th");
-      let firstName = document.createTextNode("First Name");
-      th2.appendChild(firstName);
-      row.appendChild(th2);
-
-      let th3 = document.createElement("th");
-      let lastName = document.createTextNode("Last Name");
-      th3.appendChild(lastName);
-      row.appendChild(th3);
-      
-      let th4 = document.createElement("th");
-      let courseId = document.createTextNode("Course ID");
-      th4.appendChild(courseId);
-      row.appendChild(th4);
-
-      let th5 = document.createElement("th");
-      let department = document.createTextNode("Department");
-      th5.appendChild(department);
-      row.appendChild(th5);
-
-      let th6 = document.createElement("th");
-      let name = document.createTextNode("Course Name");
-      th6.appendChild(name);
-      row.appendChild(th6);
-
-      let th7 = document.createElement("th");
-      let credits = document.createTextNode("Credits");
-      th7.appendChild(credits);
-      row.appendChild(th7);
-
-
-
-
-      
-    
-  }
-
-  function generateTable(table) {
-    var studentRegistrations = JSON.parse(localStorage.getItem("studentRegistrations"));
-    for (var i = 0; i < studentRegistrations.results.length; i++) {
-      let row = table.insertRow();
-        let cell1 = row.insertCell();
-        let text1 = document.createTextNode(studentRegistrations[i].studentId);
-        cell1.appendChild(text1);
-
-        let cell2 = row.insertCell();
-        let text2 = document.createTextNode(studentRegistrations[i].firstName);
-        cell2.appendChild(text2);
-
-        let cell3 = row.insertCell();
-        let text3 = document.createTextNode(studentRegistrations[i].lastName);
-        cell3.appendChild(text3);
-
-        let cell4 = row.insertCell();
-        let text4 = document.createTextNode(studentRegistrations[i].courseId);
-        cell4.appendChild(text4);
-
-        let cell5 = row.insertCell();
-        let text5 = document.createTextNode(studentRegistrations[i].department);
-        cell5.appendChild(text5);
-        
-        let cell6 = row.insertCell();
-        let text6 = document.createTextNode(studentRegistrations[i].name);
-        cell6.appendChild(text6);
-        
-        let cell7 = row.insertCell();
-        let text7 = document.createTextNode(studentRegistrations[i].credits);
-        cell7.appendChild(text7);
-      }
+    for(element in objKeys1) {
+        var th = document.createElement("th");
+        var text = document.createTextNode(objKeys1[element]);
+        th.style.border = "2px solid black";
+        th.appendChild(text);
+        row.appendChild(th);
     }
+}
+
+function generateCourseCatalog(table){
+
+    console.log(localStorage.getItem("allCourses"));
+    var courses = JSON.parse(localStorage.getItem("allCourses"));
+    generateCourseHead(table,courses[0]);
+    console.log(courses[0])
+
+    for(var i = 0;i<courses.length;i++){
+        var row = table.insertRow(); 
+        var course = courses[i];
+        courses[i]["Add Course"] = "Add Course";
+
+        for(element in courses[i]){
+            console.log(element);
+            var cell = row.insertCell();
+            cell.style.border = "1px solid black";
+            var content = document.createTextNode(course[element]);
+            if(element == "description"){
+                //var button = document.createElement("button");
+                cell.innerHTML = '<button data-toggle="collapse" data-target="#description">Description</button>';
+                var div = document.createElement("div");
+                div.id = "description";
+                div.className = "collapse";
+                div.appendChild(content);
+                cell.appendChild(div)
+                row.appendChild(cell);
+                continue;
+            }
+            cell.appendChild(content);
+            row.appendChild(cell);
+        }
+    }
+}
+
+function generateCourseHead(table,course){
+
+    var head = table.createTHead();
+    var row = head.insertRow();
+
+    var courses = JSON.parse(localStorage.getItem("allCourses"));
+    courses[0]["Add Course"] = "Add Course";
+
+    var course = courses[0];
+    console.log(courses[0]);
+
+    console.log(course);
+    console.log(Object.keys(course));
+    var objKeys = Object.keys(course);
+
+    for(element in Object.keys(course)) {
+        var th = document.createElement("th");
+        var text = document.createTextNode(objKeys[element]);
+        th.style.border = "2px solid black";
+        th.appendChild(text);
+        row.appendChild(th);
+    }
+}
