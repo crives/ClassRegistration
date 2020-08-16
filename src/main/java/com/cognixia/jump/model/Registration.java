@@ -65,6 +65,5 @@ public class Registration implements Serializable {
 		return "Registration [studentId=" + studentId + ", courseId=" + courseId + "]";
 	}
 	
-	
 }
 	

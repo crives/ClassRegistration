@@ -1,10 +1,14 @@
 package com.cognixia.jump.controller;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,6 +40,16 @@ public class StudentController {
 		
 		return passwords;
 	}
+	
+	@PostMapping("/students/add")
+	public String addStudent(@RequestBody Student student) throws NoSuchAlgorithmException, InvalidKeySpecException{
+		student.setId(-1L);
+		student.setPassword(student.createHash(student.getPassword()));
+		service.save(student);
+		
+		return "Student saved";
+	}
+		
 		
 
 	@GetMapping("/students/id/{username}")
