@@ -1,6 +1,6 @@
 function initialize(){
     getRegistrations("/api/registration/");
-    getAllCourses("/api/courses/")
+    getAllCourses("/api/courses/");
     generateTables();
 }
 function getAllCourses(url) {
@@ -39,8 +39,10 @@ function generateTables() {
     generateStudentClasses(studentClasses);
     generateCourseCatalog(courseCatalog);
 }
+
+// FEED IN STUDENT-ID
 function getStudentCourses(){
-    url = "api/registration/1"
+    url = "api/registration/4" //+ studentId;
     var xhttpList = new XMLHttpRequest();
     // Read JSON - and put in storage
     xhttpList.onreadystatechange = function () {
@@ -75,7 +77,7 @@ function generateStudentClasses(table){
         var courseId = studentRegistrationsArray[i].courseId;
         getOnecourse(courseId);
         var course = JSON.parse(sessionStorage.getItem("course"));
-        console.log(element);
+        // console.log(element);
 
         for(element in course){
             console.log(element);
@@ -141,7 +143,7 @@ function generateCourseCatalog(table){
         
         courses[i]["Add Course"] = "Add Course";
         for(element in courses[i]){
-            console.log(element);
+            // console.log(element);
             var cell = row.insertCell();
             
             cell.style.border = "1px solid black";
@@ -161,8 +163,14 @@ function generateCourseCatalog(table){
 
 function moveClassToStudent(course){
 	return function() {
-        alert('sgfs'+course['description']);
+        alert("You are now adding course" + ' ' + course['courseId'] + ': ' + course['name']);
         insertRegistration(course);
+
+        var studentClasses = document.getElementById("studentClasses");
+        studentClasses.innerHTML = '';
+
+        getStudentCourses();
+        generateTables();
     };
 }
 
@@ -170,12 +178,14 @@ function insertRegistration(course){
     url = "api/registration/add"
     var xhttpList = new XMLHttpRequest();
 
-    var data = {
-    		"studentId":4,
-    		"courseId": "AMS250",
-    		"registrationId":13
-    };
-    console.log(data);
+    // make this data the data that is clicked on
+    // var data = {
+    // 		"studentId":4,
+    //         "registrationId":13,
+    //         "courseId": "AMS250"
+    // };
+    
+    // console.log(data);
     // Read JSON - and put in storage
     xhttpList.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -183,13 +193,14 @@ function insertRegistration(course){
         }
     };
     console.log(course);
-    var send = JSON.stringify(data); 
+    var send = JSON.stringify(course); 
     console.log(send);
     
     xhttpList.open("POST", url, true);
     xhttpList.setRequestHeader("Content-type", "application/json");
     xhttpList.send(send);
     console.log("worked");
+    // console.log(getRegistrations("/api/registration/"));
 }
 
 
