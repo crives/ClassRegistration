@@ -21,7 +21,7 @@ public class Registration implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long registrationId;
 	
-	@Column(unique = true, nullable = false)
+	@Column(nullable = false)
 	private String courseId;
 
 	public Registration() {
