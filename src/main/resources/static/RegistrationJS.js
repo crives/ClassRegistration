@@ -16,6 +16,7 @@ function getAllCourses(url) {
     xhttpList.send();
     console.log("Registration List stored");
 }
+
 function getRegistrations(url) {
     //make initial api call to get Student list
     var xhttpList = new XMLHttpRequest();
@@ -42,8 +43,13 @@ function generateTables() {
 
 // FEED IN STUDENT-ID
 function getStudentCourses(){
-    url = "api/registration/4" //+ studentId;
+    var studentid = localStorage.getItem("studentid");
+    
+    console.log(studentid);
+
+    url = "api/registration/" + studentid; //+ studentId;
     var xhttpList = new XMLHttpRequest();
+
     // Read JSON - and put in storage
     xhttpList.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -54,6 +60,7 @@ function getStudentCourses(){
     xhttpList.send();
     console.log("Student Registrations List stored");
 }
+
 function getOneRegistration(url) {
     //Get an individual pokemon from the nested endpoint
     var xhttpList = new XMLHttpRequest();
@@ -66,6 +73,7 @@ function getOneRegistration(url) {
     };
     xhttpList.send();
 }
+
 function generateStudentClasses(table){
     console.log(localStorage.getItem("studentRegistrations"));
     var studentRegistrationsArray = JSON.parse(localStorage.getItem("studentRegistrations"))
@@ -75,12 +83,14 @@ function generateStudentClasses(table){
         var row = table.insertRow(); 
        // var studentRegistration = studentRegistrationsArray[i];
         var courseId = studentRegistrationsArray[i].courseId;
+        var registrationId = studentRegistrationsArray[i].registrationId;
         getOnecourse(courseId);
         var course = JSON.parse(sessionStorage.getItem("course"));
+
         // console.log(element);
 
         for(element in course){
-            console.log(element);
+            // console.log(element);
             var cell = row.insertCell();
             cell.style.border = "1px solid black";
             var content = document.createTextNode(course[element]);
@@ -92,8 +102,13 @@ function generateStudentClasses(table){
             cell.appendChild(content);
             row.appendChild(cell);
         }
+        var cell = row.insertCell();
+
+        cell.innerHTML = '<button class="btn btn-danger" onclick="deleteRegistration(' + registrationId + ')">DELETE</button>';
+        row.appendChild(cell);
     }
 }
+
 function isButtonStudent(cell,i,row,content){
 	cell.innerHTML = '<button data-toggle="collapse" data-target="#studentdescription'+i+'">Description</button>';
 	var div = document.createElement("div");
@@ -103,6 +118,37 @@ function isButtonStudent(cell,i,row,content){
 	cell.appendChild(div)
 	row.appendChild(cell);
 }
+
+function deleteRegistration(registrationId) {
+    // We append the URL to have the id based on what is passed, for our API
+    var link = "api/registration/delete/" + registrationId;
+    console.log("Loaded into delete function");
+
+    var ok = confirm("Are you sure you want to delete?\nPress 'OK' to confirm, or 'cancel' to cancel");
+    if (ok == true) {
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("DELETE", link, true);
+
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                // The deletion from the database happens when this call is sent, however we also need to remove
+                // from the page.  We do that by grabbing the card by id (which is the same as the student id) and then navigate to its parent node.
+                // We can then from the parent node, call the removeChild() and say which card to remove.
+                // var removeCard = document.getElementById(id);
+
+                // removeCard.parentNode.removeChild(removeCard);
+                console.log("Student deleted.");
+                
+            
+            }
+        };
+        // No data to be sent in body
+        xhttp.send(null);
+    }
+    window.reload();
+}
+
 function getOnecourse(courseId){
     url = "api/courses/" + courseId;
     var xhttpList = new XMLHttpRequest();
@@ -115,11 +161,15 @@ function getOnecourse(courseId){
     };
     xhttpList.send();
 }
+
 function generateStudentClassesHead(table, studentRegistration){
     var head = table.createTHead();
     var row = head.insertRow();
     var courseColumnnames = JSON.parse(localStorage.getItem("allCourses"));
+
     var course = courseColumnnames[0];
+    // course[0]["Delete Course"];
+
     console.log(course);
     console.log(Object.keys(course));
     var objKeys1 = Object.keys(course);
@@ -130,7 +180,13 @@ function generateStudentClassesHead(table, studentRegistration){
         th.appendChild(text);
         row.appendChild(th);
     }
+    // var text1 = document.createTextNode("Delete Courses");
+    // var th1 = document.createElement("th");
+    // th.appendChild(text1);
+    // row.appendChild(th1);
+
 }
+
 function generateCourseCatalog(table){
     console.log(localStorage.getItem("allCourses"));
     var courses = JSON.parse(localStorage.getItem("allCourses"));
@@ -141,7 +197,7 @@ function generateCourseCatalog(table){
         
         var course = courses[i];
         
-        courses[i]["Add Course"] = "Add Course";
+        // courses[i]["Add Course"] = "Add Course";
         for(element in courses[i]){
             // console.log(element);
             var cell = row.insertCell();
@@ -158,7 +214,6 @@ function generateCourseCatalog(table){
             row.appendChild(cell);
         }
     }
-
 }
 
 function moveClassToStudent(course){
@@ -171,6 +226,7 @@ function moveClassToStudent(course){
 
         getStudentCourses();
         generateTables();
+        window.reload();
     };
 }
 
@@ -179,11 +235,11 @@ function insertRegistration(course){
     var xhttpList = new XMLHttpRequest();
 
     // make this data the data that is clicked on
-    // var data = {
-    // 		"studentId":4,
-    //         "registrationId":13,
-    //         "courseId": "AMS250"
-    // };
+    var data = {
+    		"studentId": localStorage.getItem("studentid"),
+            "registrationId":13,
+            "courseId": course['courseId']
+    };
     
     // console.log(data);
     // Read JSON - and put in storage
@@ -193,8 +249,9 @@ function insertRegistration(course){
         }
     };
     console.log(course);
-    var send = JSON.stringify(course); 
-    console.log(send);
+
+    var send = JSON.stringify(data); 
+    console.log(data);
     
     xhttpList.open("POST", url, true);
     xhttpList.setRequestHeader("Content-type", "application/json");
@@ -202,7 +259,6 @@ function insertRegistration(course){
     console.log("worked");
     // console.log(getRegistrations("/api/registration/"));
 }
-
 
 function isButton(cell,i,row,content){
 	cell.innerHTML = '<button data-toggle="collapse" data-target="#description'+i+'">Description</button>';
@@ -218,7 +274,7 @@ function generateCourseHead(table,course){
     var head = table.createTHead();
     var row = head.insertRow();
     var courses = JSON.parse(localStorage.getItem("allCourses"));
-    courses[0]["Add Course"] = "Add Course";
+    // courses[0]["Add Course"] = "Add Course";
     var course = courses[0];
     console.log(courses[0]);
     console.log(course);
