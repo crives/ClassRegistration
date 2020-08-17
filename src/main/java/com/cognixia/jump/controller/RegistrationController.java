@@ -1,13 +1,17 @@
 package com.cognixia.jump.controller;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cognixia.jump.exception.ResourceNotFoundException;
@@ -48,25 +52,24 @@ public class RegistrationController {
 		//return new Student();
 	}
 
-//	@DeleteMapping("/delete/Registration")
-//	public ResponseEntity<String> deleteStudent(@RequestBody Map<String, String> registrationInfo) throws Exception {
-//	 	
-//		long studentId = Long.parseLong( registrationInfo.get("studentId") );
-//		String courseId = registrationInfo.get("courseId");
-//		
-//		Registration registration = service.findByStudentIDandCourseID(studentId, courseId);
-//		
-//		if(registration!=null) {
-//			service.deleteByStudentIDandCourseID(studentId, courseId);
-//			
-//			return ResponseEntity.status(200).body("Deleted registration with studentiId = " + studentId + " and courseId" + courseId);	
-//		}
-//		else {
-//			return ResponseEntity.status(400)
-//					.body("Registration with studentId = " + studentId + " and courseId" + courseId + " was not found");
-//		}
-//			
-//	}
+	@DeleteMapping("/registration/delete/{registrationId}")
+	public ResponseEntity<String> deleteRegistration(@PathVariable long registrationId ) throws Exception {
+		
+		Optional<Registration> found = service.findByRegistrationId(registrationId);
+		
+		if(found.isPresent()) {
+			
+			service.deleteByRegistrationId(registrationId);
+			
+			return ResponseEntity.status(200).body("Deleted animal with id = " + registrationId);	
+			}
+		else {
+			return ResponseEntity.status(400)
+					.header("animal id", registrationId + "")
+					.body("animal with id = " + registrationId + " not found");
+		}
+			
+	}
 
 }
 
