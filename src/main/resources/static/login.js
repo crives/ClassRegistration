@@ -1,25 +1,34 @@
 function initialize(){
+	//localStorage.clear();
     login();
-   // setAction();
+    OnSubmitForm();
 
     
 }
 
-function setAction(){
-	 var checked = JSON.parse(localStorage.getItem("validate"));
-	 console.log("The user was confirmed inthe validate function. Validate:  " + checked );
-	 if(checked == true){
-		  document.user_form.action = "CourseCatalog.html";
+	function OnSubmitForm()
+	{
+		console.log("In the Submit Form function");
+    	var idfound = localStorage.getItem("studentid");
+		console.log("If found >>>>" + idfound);
 
-		 return true;
-	 }
-	 else{
-		  document.user_form.action = "index.html";
+    		
+    if(idfound != 0)
+	  {
+    	console.log("into the first if statement");
+	   document.userform.action ="index.html";
+	  }
+	  else{
+	    console.log("into the second if statement");
 
-		 return false;
-	 }
-	  
-}
+	    document.userform.action ="login.html";
+	  }
+	  return true;
+	 
+	
+	}
+	
+
 
 
 function getUsernames(url){
@@ -64,36 +73,37 @@ function login(){
    var usernames = JSON.parse(localStorage.getItem("allusernames"));
    var passwords = JSON.parse(localStorage.getItem("allpasswords"));
 
-    var correct = false;
+
+
+   var correct = false;
     var found = true;
-    for(var i = 0; i <= usernames.length; i++){
-        if(username == usernames[i]){
-            if(password == passwords[i]){
-                console.log("YOU ENTERED THE RIGHT CREDENTIALS");
-                var id = getUserId(username);
-                console.log("ID Retrieved by the Username: " + id);
-                localStorage.setItem("studentid", id);
-                localStorage.setItem("usernamelogin", username);
-                localStorage.setItem("passwordlogin", password);
-                correct = true;
-                localStorage.setItem("validate", correct);
-      		  document.user_form.action = "CourseCatalog.html";
+    console.log("Before the loop");
+    var exists = usernames.includes(username);
+    console.log("exists function: "+ exists);
+    console.log(typeof usernames);
+    var userindex = usernames.indexOf(username);
+    if(exists){
+    	if(password == passwords[userindex] ){
+    		alert("You entered in the right credentials");
+    		getUserId(username);
+    		var idfound = localStorage.getItem("studentid");
+    		console.log("Local Storage set studentid to: " + idfound);
 
+    	}
+    	else{
+            localStorage.setItem("studentid", 0);
 
-               break;
-            }
-           else{
-                alert("You entered the wrong password");
-                break;
-            }
-        }
-        
-        	
-        }
-	  document.user_form.action = "index.html";
+    		alert("Incorrect password");
+    	}
+    }
+    else{
+        localStorage.setItem("studentid", 0);
 
+    	alert("This username does not exist");
+    }
     
-
+    console.log(passwords[userindex]);
+  
     }
    
 
@@ -108,10 +118,11 @@ function getUserId(username){
     xhttpList.onreadystatechange = function(){
         if(this.readyState == 4 && this.status == 200){
         	var id = xhttpList.responseText;
-            localStorage.setItem("studentid", id );
+            localStorage.setItem("studentid", id);
             console.log("Retrieved student id");
             console.log(id);
         }
+        
     };
     xhttpList.send();
     console.log("Success.");
@@ -122,6 +133,8 @@ function getUserId(username){
 
    console.log(usernamelog);
    console.log(passwordlog);
+   
+ //  return(id);
 
 
 }
