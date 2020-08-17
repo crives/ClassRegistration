@@ -96,7 +96,7 @@ function generateStudentClasses(table){
     
     console.log(studentRegistrationsArray)
     
-    var registrationId;
+  
 
     for(var i = 0; i < studentRegistrationsArray.length; i++){
 
@@ -104,10 +104,11 @@ function generateStudentClasses(table){
        // var studentRegistration = studentRegistrationsArray[i];
         var courseId = studentRegistrationsArray[i].courseId;
         var studentId = studentRegistrationsArray[i].studentId;
-        registrationId = studentRegistrationsArray[i].registrationId;
+        var registrationId = studentRegistrationsArray[i].registrationId;
         getOnecourse(courseId);
         var course = JSON.parse(sessionStorage.getItem("course"));
         console.log(element);
+        //
 
         for(element in course){
 
@@ -129,30 +130,40 @@ function generateStudentClasses(table){
             cell.appendChild(content);
             row.appendChild(cell);
         }
-        var button = document.createElement("button");
-        button.innerHTML = "Delete";
-        button.addEventListener ("click", function() {
-            var ok = confirm("Are you sure you want to delete this course?");
-            if (ok == true) {
-                var url = "api/registration/delete/" + registrationId;
-                var xhttp = new XMLHttpRequest();
+        var cell = row.insertCell();
+        cell.innerHTML = '<button class="btn btn-danger" onclick="deleteRegistration(' + registrationId + ')">DELETE</button>';
+        row.appendChild(cell);
+
+    
+        
+        // var button = document.createElement("button");
+        // button.innerHTML = "Delete";
+        // button.addEventListener ("click", function() {
+        //     var ok = confirm("Are you sure you want to delete this course?");
+        //     if (ok == true) {
+        //         var url = "api/registration/delete/" + registrationId;
+        //         var xhttp = new XMLHttpRequest();
                 
-                xhttp.open("DELETE", url, true);
-                xhttp.setRequestHeader('content-Type', 'application/json');
-                xhttp.onreadystatechange = function () {
-                    if (this.readyState == 4 && this.status == 200) {
-                        console.log("Delete success");
+        //         xhttp.open("DELETE", url, true);
+        //         xhttp.setRequestHeader('content-Type', 'application/json');
+        //         xhttp.onreadystatechange = function () {
+        //             if (this.readyState == 4 && this.status == 200) {
+        //                 console.log("Delete success");
 
                        
-                    }
-                };
-                // Be sure that the JSON student is coverted to String before sending, using JSON.stringify
-                xhttp.send(null);
-            }
-          });
-        var cell = row.insertCell();
-        cell.appendChild(button);
-            row.appendChild(cell);
+        //             }
+        //         };
+        //         // Be sure that the JSON student is coverted to String before sending, using JSON.stringify
+        //         xhttp.send(null);
+        //     }
+        //     getStudentCourses();
+        //     generateTables();
+        //   });
+        // var cell = row.insertCell();
+        // cell.appendChild(button);
+        //     row.appendChild(cell);
+            
+           
 
         // var cell = row.insertCell();
         // cell.style.border = "1px solid black";
@@ -165,6 +176,35 @@ function generateStudentClasses(table){
 
     }
 }
+
+function deleteRegistration(registrationId) {
+    // We append the URL to have the id based on what is passed, for our API
+    var link = "api/registration/delete/" + registrationId;
+    console.log("Loaded into delete function");
+
+    var ok = confirm("Are you sure you want to delete?\nPress 'OK' to confirm, or 'cancel' to cancel");
+    if (ok == true) {
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("DELETE", link, true);
+
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                // The deletion from the database happens when this call is sent, however we also need to remove
+                // from the page.  We do that by grabbing the card by id (which is the same as the student id) and then navigate to its parent node.
+                // We can then from the parent node, call the removeChild() and say which card to remove.
+                // var removeCard = document.getElementById(id);
+
+                // removeCard.parentNode.removeChild(removeCard);
+                console.log("Student deleted.");
+            }
+        };
+        // No data to be sent in body
+        xhttp.send(null);
+    }
+}
+
+
 
 function getOnecourse(courseId){
     url = "api/courses/" + courseId;
@@ -214,7 +254,7 @@ function generateCourseCatalog(table){
         courses[i]["Add Course"] = "Add Course";
 
         for(element in courses[i]){
-            console.log(element);
+          //  console.log(element);
             var cell = row.insertCell();
             cell.style.border = "1px solid black";
             var content = document.createTextNode(course[element]);
